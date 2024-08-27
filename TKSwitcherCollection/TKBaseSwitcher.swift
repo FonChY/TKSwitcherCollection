@@ -93,7 +93,7 @@ open class TKBaseSwitch: UIControl {
     @objc internal func toggleValue() {
         self.on.toggle()
         valueChange?(!isOn)
-        sendActions(for: UIControlEvents.valueChanged)
+        sendActions(for: UIControl.Event.valueChanged)
         changeValueAnimate(isOn, duration: animateDuration)
     }
 
