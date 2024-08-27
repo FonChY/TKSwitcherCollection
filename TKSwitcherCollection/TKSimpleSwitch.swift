@@ -44,17 +44,17 @@ open class TKSimpleSwitch: TKBaseSwitch {
     // 是否加旋转特效
     @IBInspectable open var rotateWhenValueChange: Bool = false
 
-    @IBInspectable open var onColor: UIColor = UIColor(red: 0.341, green: 0.914, blue: 0.506, alpha: 1) {
+    @IBInspectable open var onColor: UIColor = UIColor(red: 243.0/255.0, green: 66.0/255.0, blue: 66.0/255.0, alpha: 1.00) {
         didSet {
             resetView()
         }
     }
-    @IBInspectable open var offColor: UIColor = UIColor(white: 0.9, alpha: 1) {
+    @IBInspectable open var offColor: UIColor = UIColor(red: 216.0/255.0, green: 216.0/255.0, blue: 216.0/255.0, alpha: 1.00) {
         didSet {
             resetView()
         }
     }
-    @IBInspectable open var lineColor: UIColor = UIColor(white: 0.8, alpha: 1) {
+    @IBInspectable open var lineColor: UIColor = UIColor(red: 216.0/255.0, green: 216.0/255.0, blue: 216.0/255.0, alpha: 1.00) {
         didSet {
             resetView()
         }
@@ -64,7 +64,7 @@ open class TKSimpleSwitch: TKBaseSwitch {
             resetView()
         }
     }
-    @IBInspectable open var lineSize: Double = 10 {
+    @IBInspectable open var lineSize: Double = 5 {
         didSet {
             resetView()
         }
@@ -126,15 +126,28 @@ open class TKSimpleSwitch: TKBaseSwitch {
 
         // 颜色动画
         let backgroundFillColorAnim = CAKeyframeAnimation(keyPath: "fillColor")
-        backgroundFillColorAnim.values = [stateToFillColor(!value),
-                                          stateToFillColor(!value),
+        backgroundFillColorAnim.values = [stateToFillColor(value),
                                           stateToFillColor(value),
-                                          stateToFillColor(value)]
+                                          stateToFillColor(!value),
+                                          stateToFillColor(!value)]
         backgroundFillColorAnim.keyTimes = [0, 0.5, 0.51, 1]
         backgroundFillColorAnim.duration = duration
         backgroundFillColorAnim.fillMode = .forwards
         backgroundFillColorAnim.isRemovedOnCompletion = false
 
+        
+        // 颜色动画
+        let backgroundFillColorAnim1 = CAKeyframeAnimation(keyPath: "strokeColor")
+        backgroundFillColorAnim1.values = [stateToFillColor(value),
+                                          stateToFillColor(value),
+                                          stateToFillColor(!value),
+                                          stateToFillColor(!value)]
+        backgroundFillColorAnim1.keyTimes = [0, 0.5, 0.51, 1]
+        backgroundFillColorAnim1.duration = duration
+        backgroundFillColorAnim1.fillMode = .forwards
+        backgroundFillColorAnim1.isRemovedOnCompletion = false
+        
+        
         // 旋转动画
         if rotateWhenValueChange {
             UIView.animate(withDuration: duration, animations: { () -> Void in
@@ -152,6 +165,7 @@ open class TKSimpleSwitch: TKBaseSwitch {
         let animateKey = value ? "value" : "TurnOff"
         switchControl.add(switchControlChangeStateAnim, forKey: animateKey)
         backgroundLayer.add(backgroundFillColorAnim, forKey: "Color")
+        backgroundLayer.add(backgroundFillColorAnim1, forKey: "strokeColorAnimation")
     }
 
     private func stateToFillColor(_ isOn: Bool) -> CGColor {
